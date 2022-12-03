@@ -10,6 +10,22 @@ def get_definition_checker(true_definition: str) -> Callable:
     return definition_checker
 
 
+def check_definition_1(your_answer: str) -> None:
+    get_definition_checker("Sequential decision-making problems")(your_answer)
+
+
+def check_definition_2(your_answer: str) -> None:
+    get_definition_checker("A process in which time is modelled with discrete steps")(your_answer)
+
+
+def check_definition_3(your_answer: str) -> None:
+    get_definition_checker("States, actions & rewards")(your_answer)
+
+
+def check_definition_4(your_answer: str) -> None:
+    get_definition_checker("The sum of future rewards")(your_answer)
+
+
 def get_mini_exercise_checker(real_state: str, real_action: str, real_reward: str, success_message: str) -> Callable:
     def mini_exercise_checker(state: str, action: str, reward: str):
         error_msg = ""
@@ -33,7 +49,7 @@ def check_exercise_1(state: str, action: str, reward: str):
         "Spaces filled at the bottom of the board, current piece shape, current piece location",
         "Whether to move the piece right, left or keep it where it is",
         "The number of points you've scored",
-        "Congratulations, you got number 1 right!\n\nMove onto the next mini-exercise in this replit!\n",
+        "Congratulations, you got it right!\n\nMove onto the next mini-exercise!",
         )
     checker(state, action, reward)
 
@@ -44,7 +60,7 @@ def check_exercise_2(state: str, action: str, reward: str):
         "Robot location & orientation, layout of the room it's in & the goal location it's aiming to reach",
         "Acceleration/deceleration and tyre angle change",
         "Whether it has reached the goal location",
-        "Another one bites the dust... congrats, that's number 2 right!\n\n1 more mini-exercise left in this replit!\n",
+        "Another one bites the dust... congrats, that's right!\n\n1 more mini-exercise left!",
     )
     checker(state, action, reward)
 
@@ -55,7 +71,7 @@ def check_exercise_3(state: str, action: str, reward: str):
         "All user information incl. physical information, online behaviour & website they're on",
         "Advert that can be shown",
         "Whether the user clicks the advert & whether the user buys the advertised product",
-        "Nailed it! Good job! You've completed number 3!",
+        "Nailed it! Good job!",
     )
     checker(state, action, reward)
 
@@ -135,4 +151,4 @@ def check_barry_flight_paths(policy: Dict[str, str]) -> None:
             print(f"Flying from {state} to {action} isn't the optimal flight to take from {state} :/")
             return
 
-    print("Congrats, you've completed the first tutorial & all exercises!!\n\nReturn to Replit to 'SUBMIT' (top right corner)")
+    print("Congrats, you've completed the first tutorial & all exercises!!\n\nYou can 'SUBMIT' the Replit (top right corner)")
