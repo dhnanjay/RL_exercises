@@ -1,55 +1,82 @@
-from ex1_checks import (
-    check_exercise_1,
-    check_exercise_2,
-    check_exercise_3,
-)
+# The time discount factor used
+gamma = 0.99
 
-###---------------------------------------------------------###
+# Get the reward given the current state and action taken
+reward_function = {
+    ("Faulty", "Repair"): -50,
+    ("Faulty", "Fly"): 10,
+    ("Out of Operation", "Repair"): -100,
+    ("In Operation", "Fly"): 100,
+}
+# E.g.
+# reward = reward_function[(state, action)]
 
-### 6.1 - Game of Tetris ###
+# Get the next state based on action and current state
+transition_function = {
+    ("Faulty", "Repair"): "In Operation",
+    ("Faulty", "Fly"): "Out of Operation",
+    ("Out of Operation", "Repair"): "In Operation",
+    ("In Operation", "Fly"): "Faulty",
+}
+# To transition from `state` where you take `action`,
+# new_state = transition_function[(state, action)]
 
-# One is a state, one is an action and one is a reward
-right = "Whether to move the piece right, left or keep it where it is"
-points = "The number of points you've scored"
-player = "The player of the game, who tries to score as high as possible"
-board = "The dimensions of the Tetris board pieces on the board, not including their locations"
-spaces = "Spaces filled at the bottom of the board, current piece shape, current piece location"
+# The two possible policies
+policy_better = {
+    "In Operation": "Fly",
+    "Faulty": "Repair",
+    "Out of Operation": "Repair",
+}
+policy_worse = {
+    "In Operation": "Fly",
+    "Faulty": "Fly",
+    "Out of Operation": "Repair",
+}
+# E.g.
+# action = policy[state]
 
-
-# TODO: of the variables defined above, pass the state as 'state', action as 'action' and reward as 'reward'
-check_exercise_1(state=spaces, action=right, reward=points)
-
-###---------------------------------------------------------###
-
-
-### 6.2 - Robot navigation task ###
-
-# One is a state, one is an action and one is a reward
-hardware = "All the robotic hardware the robot has - motors, cpu, wheels & sensors"
-reached = "Whether it has reached the goal location"
-acceleration = "Acceleration/deceleration and tyre angle change"
-location = "Robot location & orientation, layout of the room it's in & the goal location it's aiming to reach"
-room = "The room the robot is in, in full detail!"
-
-
-# TODO: fill in the state as state, action as action and reward as reward
-check_exercise_2(state=location, action=acceleration, reward=reached)
-
-###---------------------------------------------------------###
-
-### 6.3 - Personalised advertiser online ###
-
-# One is a state, one is an action and one is a reward
-click = (
-    "Whether the user clicks the advert & whether the user buys the advertised product"
-)
-advert = "Advert that can be shown"
-info = "All physical information about the user - their age, height & hair colour"
-user = "All user information incl. physical information, online behaviour & website they're on"
-product = "The product or service that the advert is advertising"
+# TODO: Write code to calculate the value functions of these states given the 2 different deterministic policies
+value_function_better = { # Don't change variable names
+    "In Operation": 0,
+    "Faulty": 0,
+    "Out of Operation": 0,
+}
+value_function_worse = { # Don't change variable names
+    "In Operation": 0,
+    "Faulty": 0,
+    "Out of Operation": 0,
+}
 
 
-# TODO: you know what to do now!
-check_exercise_3(state=user, action=advert, reward=click)
+def better_value_function():
+    value_function = value_function_better
+    policy = policy_better
 
-###---------------------------------------------------------###
+    for state in ["In Operation","Faulty","Out of Operation"]:
+        currState = state
+        for i in range(0, 100):
+          action = policy[currState]
+          reward = reward_function[(currState, action)]
+
+          value_function[currState] += ((gamma**i) * reward)/100
+          currState = transition_function[(currState, action)]
+          # print(currState, value_function)
+    return value_function
+
+def worse_value_function():
+    value_function = value_function_worse
+    policy = policy_worse
+
+    for state in ["In Operation","Faulty","Out of Operation"]:
+        currState = state
+        for i in range(0, 100):
+          action = policy[currState]
+          reward = reward_function[(currState, action)]
+
+          value_function[currState] += ((gamma**i) * reward)/100
+          currState = transition_function[(currState, action)]
+          # print(currState, value_function)
+    return value_function
+  
+print(better_value_function())
+print(worse_value_function())
