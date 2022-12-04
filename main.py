@@ -58,7 +58,7 @@ def better_value_function():
           action = policy[currState]
           reward = reward_function[(currState, action)]
 
-          value_function[currState] += ((gamma**i) * reward)/100
+          value_function[currState] += ((gamma**i) * reward)
           currState = transition_function[(currState, action)]
           # print(currState, value_function)
     return value_function
@@ -73,10 +73,10 @@ def worse_value_function():
           action = policy[currState]
           reward = reward_function[(currState, action)]
 
-          value_function[currState] += ((gamma**i) * reward)/100
+          value_function[currState] += ((gamma**i) * reward)
           currState = transition_function[(currState, action)]
           # print(currState, value_function)
     return value_function
   
-print(better_value_function())
-print(worse_value_function())
+print("Following better policy:",better_value_function())
+print("Following worse policy:",worse_value_function())
