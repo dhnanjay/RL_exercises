@@ -1,55 +1,14 @@
-from ex1_checks import (
-    check_exercise_1,
-    check_exercise_2,
-    check_exercise_3,
-)
+from ex1_checks import check_barry_flight_paths
 
-###---------------------------------------------------------###
+# States are where the senior execs are
+states = ["New York", "London", "Amsterdam", "Tel Aviv", "Cairo", "Bangkok"]
 
-### 6.1 - Game of Tetris ###
+# Actions are where to fly to
+actions = ["London", "Amsterdam", "Tel Aviv", "Cairo", "Bangkok", "Hong Kong"]
 
-# One is a state, one is an action and one is a reward
-right = "Whether to move the piece right, left or keep it where it is"
-points = "The number of points you've scored"
-player = "The player of the game, who tries to score as high as possible"
-board = "The dimensions of the Tetris board pieces on the board, not including their locations"
-spaces = "Spaces filled at the bottom of the board, current piece shape, current piece location"
+# TODO: The bit you write - fill in the policy as a dictionary of {state: action} for all states
+flight_path_policy = {"New York": "Amsterdam", "London": "Cairo", "Amsterdam": "Tel Aviv", "Tel Aviv": "Cairo", "Cairo": "Bangkok", "Bangkok": "Hong Kong"}
 
 
-# TODO: of the variables defined above, pass the state as 'state', action as 'action' and reward as 'reward'
-check_exercise_1(state=spaces, action=right, reward=points)
-
-###---------------------------------------------------------###
-
-
-### 6.2 - Robot navigation task ###
-
-# One is a state, one is an action and one is a reward
-hardware = "All the robotic hardware the robot has - motors, cpu, wheels & sensors"
-reached = "Whether it has reached the goal location"
-acceleration = "Acceleration/deceleration and tyre angle change"
-location = "Robot location & orientation, layout of the room it's in & the goal location it's aiming to reach"
-room = "The room the robot is in, in full detail!"
-
-
-# TODO: fill in the state as state, action as action and reward as reward
-check_exercise_2(state=location, action=acceleration, reward=reached)
-
-###---------------------------------------------------------###
-
-### 6.3 - Personalised advertiser online ###
-
-# One is a state, one is an action and one is a reward
-click = (
-    "Whether the user clicks the advert & whether the user buys the advertised product"
-)
-advert = "Advert that can be shown"
-info = "All physical information about the user - their age, height & hair colour"
-user = "All user information incl. physical information, online behaviour & website they're on"
-product = "The product or service that the advert is advertising"
-
-
-# TODO: you know what to do now!
-check_exercise_3(state=user, action=advert, reward=click)
-
-###---------------------------------------------------------###
+# Leave this line! It checks your answer :)
+check_barry_flight_paths(flight_path_policy)
