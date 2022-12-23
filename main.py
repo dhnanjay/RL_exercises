@@ -1,55 +1,43 @@
-from ex1_checks import (
-    check_exercise_1,
-    check_exercise_2,
-    check_exercise_3,
-)
+import random
 
-###---------------------------------------------------------###
+from barry_points import BarryEnv
 
-### 6.1 - Game of Tetris ###
+# Constants in the exercise
+n_planes = 100  # number of planes
+n_flights = 10000  # number of flights barry takes
 
-# One is a state, one is an action and one is a reward
-right = "Whether to move the piece right, left or keep it where it is"
-points = "The number of points you've scored"
-player = "The player of the game, who tries to score as high as possible"
-board = "The dimensions of the Tetris board pieces on the board, not including their locations"
-spaces = "Spaces filled at the bottom of the board, current piece shape, current piece location"
+env = BarryEnv(n_planes, n_flights)
+_, reward, done, _ = env.reset()
 
+observed_barry_points = [[] for _ in range(n_planes)]
 
-# TODO: of the variables defined above, pass the state as 'state', action as 'action' and reward as 'reward'
-check_exercise_1(state=spaces, action=right, reward=points)
+# You'll need to use this to decide which plane to pick!
+estimated_mean_barry_points = [0 for _ in range(n_planes)]
 
-###---------------------------------------------------------###
+epsilon = 0.05
 
 
-### 6.2 - Robot navigation task ###
+while not done:
+    # TODO: The bit you write!!
+    # ===========================================
+    #  Currently choosing the plane randomly
+    plane_to_ride = random.choice(range(n_planes))
+    if random.random() < epsilon:
+        # Random, with probability epsilon!
+        chosen_plane_value = random.randint(0, n_planes - 1)
+    else:
+        # Greedy: pick the one with the best mean
+        chosen_plane_value = max(estimated_mean_barry_points)
+        # This gets the index of the plane with the best mean
+        plane_to_ride = estimated_mean_barry_points.index(chosen_plane_value)
+    
+    # ===========================================
 
-# One is a state, one is an action and one is a reward
-hardware = "All the robotic hardware the robot has - motors, cpu, wheels & sensors"
-reached = "Whether it has reached the goal location"
-acceleration = "Acceleration/deceleration and tyre angle change"
-location = "Robot location & orientation, layout of the room it's in & the goal location it's aiming to reach"
-room = "The room the robot is in, in full detail!"
+    # .step() rides the plane & gives the reward
+    _, reward, done, _ = env.step(plane_to_ride)
 
+    # This updates the estimates of the mean Barry points
+    observed_barry_points[plane_to_ride].append(reward)
+    plane_points = observed_barry_points[plane_to_ride]
 
-# TODO: fill in the state as state, action as action and reward as reward
-check_exercise_2(state=location, action=acceleration, reward=reached)
-
-###---------------------------------------------------------###
-
-### 6.3 - Personalised advertiser online ###
-
-# One is a state, one is an action and one is a reward
-click = (
-    "Whether the user clicks the advert & whether the user buys the advertised product"
-)
-advert = "Advert that can be shown"
-info = "All physical information about the user - their age, height & hair colour"
-user = "All user information incl. physical information, online behaviour & website they're on"
-product = "The product or service that the advert is advertising"
-
-
-# TODO: you know what to do now!
-check_exercise_3(state=user, action=advert, reward=click)
-
-###---------------------------------------------------------###
+    estimated_mean_barry_points[plane_to_ride] = sum(plane_points) / len(plane_points)
