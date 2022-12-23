@@ -1,55 +1,51 @@
-from ex1_checks import (
-    check_exercise_1,
-    check_exercise_2,
-    check_exercise_3,
-)
+from env import FlightPathEnv
 
-###---------------------------------------------------------###
+# This defines the possible cities to fly to from each city
+POSS_STATE_ACTION = {
+    "New York": ["London", "Amsterdam"],
+    "London": ["Cairo", "Tel Aviv"],
+    "Amsterdam": ["Tel Aviv", "Cairo"],
+    "Tel Aviv": ["Bangkok", "Cairo", "Hong Kong"],
+    "Cairo": ["Bangkok"],
+    "Bangkok": ["Hong Kong"],
+    "Hong Kong": [],
+}
 
-### 6.1 - Game of Tetris ###
+# Written here to save you time
+optimal_policy = {
+    "New York": "Amsterdam",
+    "London": "Cairo",
+    "Amsterdam": "Tel Aviv",
+    "Tel Aviv": "Cairo",
+    "Cairo": "Bangkok",
+    "Bangkok": "Hong Kong",
+}
+alpha = 0.15  # Update step size
 
-# One is a state, one is an action and one is a reward
-right = "Whether to move the piece right, left or keep it where it is"
-points = "The number of points you've scored"
-player = "The player of the game, who tries to score as high as possible"
-board = "The dimensions of the Tetris board pieces on the board, not including their locations"
-spaces = "Spaces filled at the bottom of the board, current piece shape, current piece location"
-
-
-# TODO: of the variables defined above, pass the state as 'state', action as 'action' and reward as 'reward'
-check_exercise_1(state=spaces, action=right, reward=points)
-
-###---------------------------------------------------------###
-
-
-### 6.2 - Robot navigation task ###
-
-# One is a state, one is an action and one is a reward
-hardware = "All the robotic hardware the robot has - motors, cpu, wheels & sensors"
-reached = "Whether it has reached the goal location"
-acceleration = "Acceleration/deceleration and tyre angle change"
-location = "Robot location & orientation, layout of the room it's in & the goal location it's aiming to reach"
-room = "The room the robot is in, in full detail!"
+# This is the format that the check function below expects. Dictionary mapping {state: value}
+value_fn = {city: 0 for city in POSS_STATE_ACTION}
 
 
-# TODO: fill in the state as state, action as action and reward as reward
-check_exercise_2(state=location, action=acceleration, reward=reached)
+# TODO: Write code to learn the value function from experience for the optimal policy
+env = FlightPathEnv()
 
-###---------------------------------------------------------###
+# For 1000 episodes
+for _ in range(1000):
+    # Each iteration is one episode. So we need to call reset() every time
+    state, reward, done, _ = env.reset()
 
-### 6.3 - Personalised advertiser online ###
+    # This while loop runs the episode
+    while not done:
 
-# One is a state, one is an action and one is a reward
-click = (
-    "Whether the user clicks the advert & whether the user buys the advertised product"
-)
-advert = "Advert that can be shown"
-info = "All physical information about the user - their age, height & hair colour"
-user = "All user information incl. physical information, online behaviour & website they're on"
-product = "The product or service that the advert is advertising"
+        action = optimal_policy[state]
 
+        # Before calling the transition function, keep the prev state for the TD update step
+        prev_state = state
 
-# TODO: you know what to do now!
-check_exercise_3(state=user, action=advert, reward=click)
+        # Transition the env object using the .step() function
+        state, reward, done, _ = env.step(action)
 
-###---------------------------------------------------------###
+        # TD update step
+        value_fn[prev_state] += alpha * (
+            reward + value_fn[state] - value_fn[prev_state]
+        )
